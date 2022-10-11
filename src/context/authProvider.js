@@ -97,10 +97,7 @@ export const AuthProvider = ({ children }) => {
         confirmPassword: formData.confirmPassword,
       };
       await axios
-        .post(
-          `${process.env.REACT_APP_BACKEND_URL}/user/register`,
-          registerUser
-        )
+        .post(`${"secrets".REACT_APP_BACKEND_URL}/user/register`, registerUser)
         .then((res) => {
           if (res.status === 201) {
             dispatch({ type: "REGISTER", payload: res.data });
@@ -137,7 +134,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       await axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/user/login`, loginUser)
+        .post(`${"secrets".REACT_APP_BACKEND_URL}/user/login`, loginUser)
         .then((res) => {
           if (res.status === 200) {
             localStorage.setItem("token", res.data.token);
@@ -194,7 +191,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       await axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/user/forgetPassword`, email)
+        .post(`${"secrets".REACT_APP_BACKEND_URL}/user/forgetPassword`, email)
         .then((res) => {
           console.log(res);
           if (res.status === 200 && res.data.email_response.info) {
@@ -232,7 +229,7 @@ export const AuthProvider = ({ children }) => {
 
       await axios
         .patch(
-          `${process.env.REACT_APP_BACKEND_URL}/user/resetPassword/${token}`,
+          `${"secrets".REACT_APP_BACKEND_URL}/user/resetPassword/${token}`,
           password
         )
         .then((res) => {
@@ -274,7 +271,7 @@ export const AuthProvider = ({ children }) => {
     try {
       //
       await axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/user/singleUser/${id}`)
+        .get(`${"secrets".REACT_APP_BACKEND_URL}/user/singleUser/${id}`)
         .then((res) => {
           //  localStorage.setItem("user", res.data.user.id);
           if (res.status === 200) {
@@ -293,7 +290,7 @@ export const AuthProvider = ({ children }) => {
   const getUserAccount = async (id) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/userAccount/${id}`,
+        `${"secrets".REACT_APP_BACKEND_URL}/user/userAccount/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -327,7 +324,7 @@ export const AuthProvider = ({ children }) => {
       };
       const id = localStorage.getItem("id");
       await axios
-        .patch(`${process.env.REACT_APP_BACKEND_URL}/user/update/${id}`, form, {
+        .patch(`${"secrets".REACT_APP_BACKEND_URL}/user/update/${id}`, form, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -370,7 +367,7 @@ export const AuthProvider = ({ children }) => {
         accountName: formData.accountName,
       };
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/account/createaccount`,
+        `${"secrets".REACT_APP_BACKEND_URL}/account/createaccount`,
         form,
         {
           headers: {
@@ -390,7 +387,7 @@ export const AuthProvider = ({ children }) => {
   const deleteBank = async (id) => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_BACKEND_URL}/account/deleteaccount/${id}`,
+        `${"secrets".REACT_APP_BACKEND_URL}/account/deleteaccount/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -417,7 +414,7 @@ export const AuthProvider = ({ children }) => {
         password: formData.password,
       };
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/cash/withdraw`,
+        `${"secrets".REACT_APP_BACKEND_URL}/cash/withdraw`,
         form,
         {
           headers: {
@@ -425,8 +422,8 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-      if(response.status === 201){
-         Swal.fire("Success!", "Withdrawal was successful!", "success");
+      if (response.status === 201) {
+        Swal.fire("Success!", "Withdrawal was successful!", "success");
       }
 
       if (response.status !== 201) {
@@ -439,7 +436,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
-      
+
       toast.error(error.response.data.message);
     }
   };
@@ -456,7 +453,7 @@ export const AuthProvider = ({ children }) => {
 
       await axios
         .post(
-          `${process.env.REACT_APP_BACKEND_URL}/transfer/sellairtime`,
+          `${"secrets".REACT_APP_BACKEND_URL}/transfer/sellairtime`,
           transferAirtime,
           {
             headers: {
@@ -498,7 +495,7 @@ export const AuthProvider = ({ children }) => {
   const getUserTransactions = async (id) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/userTransaction/${id}`,
+        `${"secrets".REACT_APP_BACKEND_URL}/user/userTransaction/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -518,7 +515,7 @@ export const AuthProvider = ({ children }) => {
   const getUserWithdrawals = async (id) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/user/userWithdrawals/${id}`,
+        `${"secrets".REACT_APP_BACKEND_URL}/user/userWithdrawals/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -534,10 +531,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-    useEffect(() => {
-      getUserWithdrawals(`${localStorage.getItem("id")}`);
-      // eslint-disable-next-line
-    }, []);
+  useEffect(() => {
+    getUserWithdrawals(`${localStorage.getItem("id")}`);
+    // eslint-disable-next-line
+  }, []);
 
   const creditWallet = async (formData) => {
     try {
@@ -549,7 +546,7 @@ export const AuthProvider = ({ children }) => {
       };
       console.log(transactionDetails);
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/wallet/credit`,
+        `${"secrets".REACT_APP_BACKEND_URL}/wallet/credit`,
         transactionDetails,
         {
           headers: {
