@@ -1,2 +1,1 @@
-# MyAirtime2cash
-Airtime to cash
+# NODE-SQ011B-AIRTIME-2-CASH-APP
