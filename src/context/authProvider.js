@@ -97,7 +97,10 @@ export const AuthProvider = ({ children }) => {
         confirmPassword: formData.confirmPassword,
       };
       await axios
-        .post(`${"secrets".REACT_APP_BACKEND_URL}/user/register`, registerUser)
+        .post(
+          `${process.env.REACT_APP_BACKEND_URL}/user/register`,
+          registerUser
+        )
         .then((res) => {
           if (res.status === 201) {
             dispatch({ type: "REGISTER", payload: res.data });
@@ -134,7 +137,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       await axios
-        .post(`${"secrets".REACT_APP_BACKEND_URL}/user/login`, loginUser)
+        .post(`${process.env.REACT_APP_BACKEND_URL}/user/login`, loginUser)
         .then((res) => {
           if (res.status === 200) {
             localStorage.setItem("token", res.data.token);
@@ -191,7 +194,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       await axios
-        .post(`${"secrets".REACT_APP_BACKEND_URL}/user/forgetPassword`, email)
+        .post(`${process.env.REACT_APP_BACKEND_URL}/user/forgetPassword`, email)
         .then((res) => {
           console.log(res);
           if (res.status === 200 && res.data.email_response.info) {
@@ -229,7 +232,7 @@ export const AuthProvider = ({ children }) => {
 
       await axios
         .patch(
-          `${"secrets".REACT_APP_BACKEND_URL}/user/resetPassword/${token}`,
+          `${process.env.REACT_APP_BACKEND_URL}/user/resetPassword/${token}`,
           password
         )
         .then((res) => {
@@ -271,7 +274,7 @@ export const AuthProvider = ({ children }) => {
     try {
       //
       await axios
-        .get(`${"secrets".REACT_APP_BACKEND_URL}/user/singleUser/${id}`)
+        .get(`${process.env.REACT_APP_BACKEND_URL}/user/singleUser/${id}`)
         .then((res) => {
           //  localStorage.setItem("user", res.data.user.id);
           if (res.status === 200) {
@@ -290,7 +293,7 @@ export const AuthProvider = ({ children }) => {
   const getUserAccount = async (id) => {
     try {
       const response = await axios.get(
-        `${"secrets".REACT_APP_BACKEND_URL}/user/userAccount/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/user/userAccount/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -324,7 +327,7 @@ export const AuthProvider = ({ children }) => {
       };
       const id = localStorage.getItem("id");
       await axios
-        .patch(`${"secrets".REACT_APP_BACKEND_URL}/user/update/${id}`, form, {
+        .patch(`${process.env.REACT_APP_BACKEND_URL}/user/update/${id}`, form, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -367,7 +370,7 @@ export const AuthProvider = ({ children }) => {
         accountName: formData.accountName,
       };
       const response = await axios.post(
-        `${"secrets".REACT_APP_BACKEND_URL}/account/createaccount`,
+        `${process.env.REACT_APP_BACKEND_URL}/account/createaccount`,
         form,
         {
           headers: {
@@ -387,7 +390,7 @@ export const AuthProvider = ({ children }) => {
   const deleteBank = async (id) => {
     try {
       const response = await axios.delete(
-        `${"secrets".REACT_APP_BACKEND_URL}/account/deleteaccount/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/account/deleteaccount/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -414,7 +417,7 @@ export const AuthProvider = ({ children }) => {
         password: formData.password,
       };
       const response = await axios.post(
-        `${"secrets".REACT_APP_BACKEND_URL}/cash/withdraw`,
+        `${process.env.REACT_APP_BACKEND_URL}/cash/withdraw`,
         form,
         {
           headers: {
@@ -453,7 +456,7 @@ export const AuthProvider = ({ children }) => {
 
       await axios
         .post(
-          `${"secrets".REACT_APP_BACKEND_URL}/transfer/sellairtime`,
+          `${process.env.REACT_APP_BACKEND_URL}/transfer/sellairtime`,
           transferAirtime,
           {
             headers: {
@@ -495,7 +498,7 @@ export const AuthProvider = ({ children }) => {
   const getUserTransactions = async (id) => {
     try {
       const response = await axios.get(
-        `${"secrets".REACT_APP_BACKEND_URL}/user/userTransaction/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/user/userTransaction/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -515,7 +518,7 @@ export const AuthProvider = ({ children }) => {
   const getUserWithdrawals = async (id) => {
     try {
       const response = await axios.get(
-        `${"secrets".REACT_APP_BACKEND_URL}/user/userWithdrawals/${id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/user/userWithdrawals/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -546,7 +549,7 @@ export const AuthProvider = ({ children }) => {
       };
       console.log(transactionDetails);
       const response = await axios.post(
-        `${"secrets".REACT_APP_BACKEND_URL}/wallet/credit`,
+        `${process.env.REACT_APP_BACKEND_URL}/wallet/credit`,
         transactionDetails,
         {
           headers: {
