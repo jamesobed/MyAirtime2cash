@@ -59,12 +59,18 @@ const TransferAirTime = () => {
         Pin: false,
       });
       try {
-
-      await airtime({
-        ...formData,
-        AmountToReceive: 0.7 * formData.AmountToSell,
-      })
-    } catch (error) {
+        await airtime({
+          ...formData,
+          AmountToReceive: (70 * formData.AmountToSell) / 100,
+        });
+          setFormData({
+            Network: "",
+            PhoneNumber: "",
+            AmountToSell: "",
+            Pin: "",
+            AmountToReceive: "",
+          });
+      } catch (error) {
       console.log(error);
     }
     
@@ -88,6 +94,7 @@ const TransferAirTime = () => {
 
   const [ussd, setUSSD] = useState("");
   const [destPhoneNumber, setDestPhoneNumber] = useState("");
+  const [amountToReceive, setAmountToReceive] = useState("");
 
   useEffect(() => {
     setUSSD(
@@ -98,7 +105,7 @@ const TransferAirTime = () => {
         : formData.Network === "AIRTEL"
         ? `*432*${process.env.REACT_APP_AIRTEL_NUMBER}*${formData.AmountToSell}#`
         : formData.Network === "9Mobile"
-        ? `*223*${formData.Pin}*${process.env.REACT_APP_9MOVILE_NUMBER}*${formData.AmountToSell}#`
+        ? `*223*${formData.Pin}*${process.env.REACT_APP_9MOBILE_NUMBER}*${formData.AmountToSell}#`
         : ""
     );
     setDestPhoneNumber(
@@ -112,6 +119,9 @@ const TransferAirTime = () => {
         ? process.env.REACT_APP_9MOBILE_NUMBER
         : ""
     );
+  setAmountToReceive(0.7 * formData.AmountToSell);
+  console.log(amountToReceive)
+
   }, [formData.Network, formData.AmountToSell, formData.Pin]);
 
   return (
@@ -174,7 +184,7 @@ const TransferAirTime = () => {
         </div>
         <div className="input-element">
           <label htmlFor="Amount to Sell">
-            Amount to Sell
+            Amount to Transfer
             {errors.AmountToSell && (
               <span style={{ color: "#de3d6d", fontSize: 12 }}>
                 {" "}
@@ -187,6 +197,7 @@ const TransferAirTime = () => {
             name="AmountToSell"
             placeholder="NGN"
             value={formData.AmountToSell}
+            min="0"
             onChange={(e) => {
               setFormData({ ...formData, AmountToSell: e.target.value.trim() });
               setErrors({ ...errors, AmountToSell: false });
@@ -227,7 +238,22 @@ const TransferAirTime = () => {
               alignItems: "center",
             }}
           >
-            <StyledInput disabled type="text" name="ussd" value={ussd} />
+            <StyledInput
+              disabled
+              type="text"
+              name="ussd"
+              value={
+                formData.Network === "MTN"
+                  ? `*600*${process.env.REACT_APP_MTN_NUMBER}*${formData.AmountToSell}*${'Transfer pin'}#`
+                  : formData.Network === "GLO"
+                  ? `*131*${process.env.REACT_APP_GLO_NUMBER}*${formData.AmountToSell}*${'Transfer pin'}#`
+                  : formData.Network === "AIRTEL"
+                  ? `*432*${process.env.REACT_APP_AIRTEL_NUMBER}*${formData.AmountToSell}#`
+                  : formData.Network === "9Mobile"
+                  ? `*223*${'Transfer pin'}*${process.env.REACT_APP_9MOBILE_NUMBER}*${formData.AmountToSell}#`
+                  : ""
+              }
+            />
             <CopyToClipboard
               text={ussd}
               onCopy={() => {
@@ -261,7 +287,7 @@ const TransferAirTime = () => {
             type="number"
             name="AmountToReceive"
             placeholder="0"
-            value={0.7 * formData.AmountToSell}
+            value={(70 * formData.AmountToSell) / 100}
           />
         </div>
 

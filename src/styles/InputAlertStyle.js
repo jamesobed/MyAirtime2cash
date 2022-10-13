@@ -1,9 +1,9 @@
 import styled from "styled-components"
 
 export const InputAlertWrapper = styled.div`
-    height: 100vh;
-    width: 100vw;
-    position: absolute;
+    height: 100%;
+    width: 100% !important;
+    position: fixed !important;
     z-index: 100;
     top: 0;
     background-size: cover;
