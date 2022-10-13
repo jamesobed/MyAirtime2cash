@@ -187,6 +187,33 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const walletBalance = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/user/walletBalance`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) { 
+            localStorage.setItem("walletBalance", res.data.data.walletBalance);
+          }
+        })
+        .catch((err) => {
+          toast.error("Unable to get wallet balance at this time", {
+            autoClose: 3000,
+          });
+        });
+    } catch (err) {
+      toast.error("Unable to get wallet balance at this time", {
+        autoClose: 3000,
+      });
+    }
+  }
+
+
   const forgotPassword = async (formData) => {
     try {
       const email = {
@@ -414,6 +441,7 @@ export const AuthProvider = ({ children }) => {
         bank: formData.bank,
         accountNumber: formData.accountNumber,
         accountName: formData.accountName,
+        otp: formData.Otp,
         password: formData.password,
       };
       const response = await axios.post(
@@ -425,21 +453,22 @@ export const AuthProvider = ({ children }) => {
           },
         }
       );
-      if (response.status === 201) {
-        Swal.fire("Success!", "Withdrawal was successful!", "success");
-      }
+      if(response.status === 201){
+         Swal.fire("Success!", "Withdrawal was successful!", "success");
+         return response
+        }
 
       if (response.status !== 201) {
         toast.warning(response.data.message);
       } else {
         console.log(response.data.newBalance);
         localStorage.setItem("walletBalance", response.data.newBalance);
-        toast.success(response.data.message);
-        window.location.reload(true);
+        // toast.success(response.data.message);
+        // window.location.reload(true);
       }
     } catch (error) {
       console.log(error);
-
+      
       toast.error(error.response.data.message);
     }
   };
@@ -473,7 +502,7 @@ export const AuthProvider = ({ children }) => {
               "success"
             );
             // navigate(`/dashboard/${localStorage.getItem("id")}`);
-            window.location.reload(true);
+            // window.location.reload(true);
           }
         })
         .catch((err) => {
@@ -534,16 +563,44 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    getUserWithdrawals(`${localStorage.getItem("id")}`);
-    // eslint-disable-next-line
-  }, []);
+  const generateOtp = async (purpose, url) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/user/${url}`,{  purpose },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // console.log(response);
+      if (response.status === 201) {
+        toast.success("Otp Sent Successfully ", {
+          autoClose: 1000,
+        });
+        return response
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.message);
+
+    }
+  };
+
+
+    useEffect(() => {
+      getUserWithdrawals(`${localStorage.getItem("id")}`);
+      // eslint-disable-next-line
+    }, []);
 
   const creditWallet = async (formData) => {
+    console.log(formData)
     try {
       const transactionDetails = {
         email: formData.email,
+        amountReceived: formData.amountsent,
         amountToSend: formData.amountreceived,
+        otp:formData.Otp,
         status: formData.status,
         transactionID: formData.id,
       };
@@ -592,6 +649,8 @@ export const AuthProvider = ({ children }) => {
         userWithdrawals,
         logout,
         state,
+        walletBalance,
+        generateOtp
       }}
     >
       {children}

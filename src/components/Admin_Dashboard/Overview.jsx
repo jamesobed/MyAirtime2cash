@@ -17,7 +17,9 @@ import InputAlert from "./InputAlert";
 import useFetch from "../../context/useFetch";
 import ThreeDots from "react-loading-icons/dist/esm/components/three-dots";
 import Swal from "sweetalert2";
-import { UseAuth } from "../../context/useAuth";
+import { UseAuth  } from "../../context/useAuth";
+import OtpInput from "../OtpInput";
+
 
 const Overview = () => {
   const [page, setPage] = useState(0);
@@ -26,8 +28,9 @@ const Overview = () => {
   const [ShowInputAlert, setShowInputAlert] = useState(false);
   const [transactionDetails, setTransactionDetails] = useState({});
   const [rowData, setRowData] = useState([]);
+  const [closeOtp, setCloseOtp] = useState(true)
   // const [showLoading, setShowLoading] = useState(false);
-  const { creditWallet } = UseAuth();
+  const { creditWallet, generateOtp } = UseAuth();
 
   let { result, showLoading } = useFetch(
     `transfer/pendingTransactions?page=${page}&size=${rowsPerPage}&allPending=pending`
@@ -75,7 +78,7 @@ const Overview = () => {
     { id: "amountsent", label: "Amount Sent", minWidth: 100, align: "right" },
     {
       id: "amountreceived",
-      label: "Amount Received",
+      label: "Amount To Receive",
       minWidth: 100,
       align: "right",
     },
@@ -123,26 +126,19 @@ const Overview = () => {
     }).then((result) => {
       if (result.isConfirmed) {
       Swal.isLoading()
-      submitData({...transactionDetails,status:'cancel'})
-      rowData.splice(transactionIndex, 1);
+      generateToken()
+      setTransactionDetails({...transactionDetails,status:'cancel'})
       closeMenu();
-        Swal.fire("Cancelled!", "Transaction cancelled.", "success");
+        // Swal.fire("Cancelled!", "Transaction cancelled.", "success");
       }else{
     closeMenu();
 
       }
     });
   };
+      // rowData.splice(transactionIndex, 1);
 
-  const submitData = async (data) =>{
-    await creditWallet(data).then((data) => {
-
-      // window.location.reload();
-    }).catch((error) => {
-      console.log(error)
-
-    });
-  }
+ 
   const handleShowInput = (value, index) => {
     setTransactionDetails({...value,rowIndex: index});
     // console.log(transactionDetails)
@@ -151,9 +147,21 @@ const Overview = () => {
     setShowInputAlert(true); 
     closeMenu();
   };
-
+  const generateToken = async() => {
+    await generateOtp('To Cancel transaction', 'sendOTPAdmin').then((data) => {
+      
+      if(data.status===201){
+        setCloseOtp(false)
+        
+      }
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
   return (
     <OverviewWrapper>
+      {!closeOtp && <OtpInput setCloseOtp={setCloseOtp} data={transactionDetails}/>}
+
       {ShowInputAlert && (
         <InputAlert
           setClose={setShowInputAlert}
@@ -247,7 +255,9 @@ const Overview = () => {
             }
           </Table>
         </TableContainer>
-        {rowData &&
+      
+      </Paper>
+      {rowData &&
         <TablePagination
           className="pagination"
           rowsPerPageOptions={[5, 10, 15]}
@@ -258,7 +268,7 @@ const Overview = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />}
-      </Paper>
+
     </OverviewWrapper>
   );
 };

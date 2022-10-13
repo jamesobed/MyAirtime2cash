@@ -16,6 +16,7 @@ import { UseAuth } from "../../../context/useAuth";
 // import { yupResolver } from "@hookform/resolvers/yup";
 // import { Controller, useForm } from "react-hook-form";
 import ThreeDots from "react-loading-icons/dist/esm/components/three-dots";
+import OtpInputUser from "../../OtpInputUser";
 
 const Withdraw = () => {
   const [isValid, setIsValid] = useState(false);
@@ -25,6 +26,8 @@ const Withdraw = () => {
   const [accountNumber, setAccountNumber] = useState(0);
   const [accountName, setAccountName] = useState("");
   const [showLoading, setShowLoading] = useState(false);
+  const [closeOtp, setCloseOtp] = useState(true)
+
   // const [amount, setAmount] = useState(0)
 
   const [formData, setFormData] = useState({
@@ -79,7 +82,20 @@ const Withdraw = () => {
     });
   };
 
-  const { withdraw } = UseAuth();
+  const { withdraw, generateOtp } = UseAuth();
+
+
+  const generateToken = async() => {
+    await generateOtp('To Confirm withdraw', 'sendOTPUser').then((data) => {
+      console.log(data.status)
+      if(data.status===201){
+        setCloseOtp(false)
+      }
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
+
 
   const Submit = (e) => {
     e.preventDefault();
@@ -87,14 +103,16 @@ const Withdraw = () => {
       formData.bank === "" ||
       formData.accountNumber === "" ||
       formData.accountName === "" ||
+      formData.amount === "0" ||
       formData.amount === 0 ||
+      formData.amount === "" ||
       formData.password === ""
     ) {
       setErrors({
         bank: formData.bank === "" ? true : false,
         accountNumber: formData.accountNumber === "" ? true : false,
         accountName: formData.accountName === "" ? true : false,
-        amount: formData.amount === 0 ? true : false,
+        amount: (formData.amount === "0" || formData.amount === "" || formData.amount === 0) ? true : false,
         password: formData.password === "" ? true : false,
       });
       if (formData.amount === "") {
@@ -102,16 +120,29 @@ const Withdraw = () => {
       }
     } else {
       setShowLoading(true);
-      withdraw(formData).then(()=>{
+      generateToken()
+      // withdraw(formData).then(()=>{
         setShowLoading(false);
-      });
+      // });
+      // withdraw(formData).then(() => {
+      //   setShowLoading(false);
+        // setFormData({
+        //   bank: "",
+        //   accountNumber: "",
+        //   accountName: "",
+        //   amount: "",
+        //   password: "",
+        // });
+      // });
+
       // console.log(formData);
-     ;
     }
   };
 
   return (
     <WithdrawWrapper>
+      {!closeOtp && <OtpInputUser setCloseOtp={setCloseOtp} setFormData={setFormData} data={formData}/>}
+
       <TabTitle>
         <b>Withdraw</b>
       </TabTitle>

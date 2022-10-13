@@ -21,7 +21,7 @@ export const SellAirTimeWrapper = styled.div`
 `;
 export const StyledInput = styled.input`
   box-sizing: border-box;
-  width: 100%;
+  width: ${({ width }) => (width ? width : "100%")};
   padding: ${({ Padding }) => (Padding ? Padding : "14px")};
   margin: 10px 0;
   border: 1px solid #d9d9d9;

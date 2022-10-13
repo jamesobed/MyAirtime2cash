@@ -133,7 +133,8 @@ function createData(date, email, phonenumber, network, amountsent, amountreceive
 }
         </Table>
       </TableContainer>
-      {rowData &&
+    </Paper>
+    {rowData &&
       <TablePagination className="pagination"
         rowsPerPageOptions={[5, 10, 15]}
         component="div"
@@ -143,7 +144,6 @@ function createData(date, email, phonenumber, network, amountsent, amountreceive
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />}
-    </Paper>
     </OverviewWrapper>
   );
 }

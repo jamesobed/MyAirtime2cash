@@ -14,6 +14,7 @@ import {
 import StyleButton from "../../styles/ButtonStyles.js";
 import UserProfileNav from "./UserProfileNav";
 import { Link } from "react-router-dom";
+import useOutsideClick from "../../context/useOutsideClick";
 
 
 export const Navbar = ({ landing, dashboard }) => {
@@ -21,6 +22,8 @@ export const Navbar = ({ landing, dashboard }) => {
   
   // eslint-disable-next-line
   const [isLogin, setIsLogin] = useState(false);
+
+
   return (
 
     <Wrapper>
@@ -37,7 +40,7 @@ export const Navbar = ({ landing, dashboard }) => {
             <span />
           </Hamburger>
         )}
-        {dashboard && <UserProfileNav dashboard setLogout={setIsLogin} />}
+        {dashboard && <UserProfileNav  dashboard setLogout={setIsLogin} />}
         </LogoWrapper>
         {landing && (
           <Menu open={open}>

@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import "react-toastify/dist/ReactToastify.css";
 import logo from "../../assets/icon/logo2.svg";
 import {
   Container,
   UpdateUserPageStyle,
   LogoWrapper,
 } from "../../styles/LoginStyles";
-import { UseAuth } from "../../context/useAuth";
-import ThreeDots from "react-loading-icons/dist/esm/components/three-dots";
+import { UseAuth } from "../../context/useAuth"; 
+import { ThreeDots } from 'react-loading-icons'
 
 export const Login = () => {
   const [showLoading, setShowLoading] = useState(false);
@@ -23,15 +22,15 @@ export const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setShowLoading(true);
+  setShowLoading(true);
 
-    await login(formData)
-      .then(() => {
-        setShowLoading(false);
-      })
-      .catch(() => {
-        setShowLoading(false);
-      });
+    await login(formData).then(() => {
+      setShowLoading(false);
+    }).catch(() => {
+      setShowLoading(false);
+    }
+    );
+
   };
 
   return (
@@ -51,7 +50,7 @@ export const Login = () => {
             <div className="input-element">
               <label htmlFor="">Email/Username</label>
               <input
-                required
+              required
                 type="text"
                 name="emailOrUsername"
                 placeholder="Enter your email or username"
@@ -66,7 +65,7 @@ export const Login = () => {
             <div className="input-element">
               <label htmlFor="password">Password</label>
               <input
-                required
+              required
                 type="password"
                 name="password"
                 placeholder="Enter your password"
@@ -97,11 +96,8 @@ export const Login = () => {
               <ThreeDots height="1rem" fill="#DE3D6D" />}
           </Button> */}
             <button disabled={showLoading} type="submit" className="login-btn">
-              {!showLoading ? (
-                <span>Login</span>
-              ) : (
-                <ThreeDots height="1rem" fill="#fff" />
-              )}
+            {!showLoading ? <span>Login</span>:
+              <ThreeDots height="1rem" fill="#fff" />}
             </button>
           </form>
           <p className="create-account">
